@@ -61,16 +61,19 @@ class LaravelAwsSecretsManager
 
     protected function checkCache()
     {
-        foreach ($this->configVariables as $variable => $configPath) {
-            $val = Cache::store($this->cacheStore)->get($variable);
-            if (! is_null($val)) {
-                putenv("$variable=$val");
-            } else {
-                return false;
+        if(count($this->configVariables)) {
+            foreach ($this->configVariables as $variable => $configPath) {
+                $val = Cache::store($this->cacheStore)->get($variable);
+                if (! is_null($val)) {
+                    putenv("$variable=$val");
+                } else {
+                    return false;
+                }
             }
+    
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     protected function getVariables()
